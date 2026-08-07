@@ -24,6 +24,14 @@ test("rejects a slot inside the two-hour tutoring lead time", async () => {
   assert.deepEqual(response, { success: false, error: "Please choose a time at least 2 hours from now." });
 });
 
+test("rejects a slot within two hours of another upcoming session", async () => {
+  const response = await requestReschedule({ ...baseRequest, requestedDatetimeUtc: "2026-08-12T12:00:00.000Z" }, now);
+  assert.deepEqual(response, {
+    success: false,
+    error: "This time is within 2 hours of Science with Daniel Ortiz.",
+  });
+});
+
 test("rejects the current session slot", async () => {
   const response = await requestReschedule({ ...baseRequest, requestedDatetimeUtc: baseRequest.existingDatetimeUtc }, now);
   assert.deepEqual(response, { success: false, error: "Choose a time different from the current session." });

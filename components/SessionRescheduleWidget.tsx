@@ -2,6 +2,7 @@
 
 import { FormEvent, useMemo, useState } from "react";
 import { requestReschedule } from "@/functions/requestReschedule";
+import { findNearbySession } from "@/lib/reschedulePolicy";
 import type { RescheduleReason, TutoringSession } from "@/lib/types";
 
 interface SessionRescheduleWidgetProps {
@@ -50,9 +51,31 @@ export function SessionRescheduleWidget({ sessions }: SessionRescheduleWidgetPro
     setMessage(null);
   }
 
+  function handleTimeChange(value: string): void {
+    setLocalDateTime(value);
+    if (!selectedSession || !value) {
+      setMessage(null);
+      return;
+    }
+
+    const nearbySession = findNearbySession(new Date(value).toISOString(), sessions, selectedSession.id);
+    setMessage(
+      nearbySession
+        ? `Choose a time at least 2 hours away from ${nearbySession.subject} with ${nearbySession.teacherName}.`
+        : null,
+    );
+  }
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
     if (!selectedSession || !localDateTime) return;
+
+    const requestedDatetimeUtc = new Date(localDateTime).toISOString();
+    const nearbySession = findNearbySession(requestedDatetimeUtc, sessions, selectedSession.id);
+    if (nearbySession) {
+      setMessage(`Choose a time at least 2 hours away from ${nearbySession.subject} with ${nearbySession.teacherName}.`);
+      return;
+    }
 
     setIsSubmitting(true);
     setMessage(null);
@@ -62,7 +85,7 @@ export function SessionRescheduleWidget({ sessions }: SessionRescheduleWidgetPro
       const response = await requestReschedule({
         sessionId: selectedSession.id,
         existingDatetimeUtc: selectedSession.datetimeUtc,
-        requestedDatetimeUtc: new Date(localDateTime).toISOString(),
+        requestedDatetimeUtc,
         reason,
       });
       setMessage(response.success ? "Request received. We will confirm the new session shortly." : response.error ?? "Unable to request a new time.");
@@ -115,7 +138,7 @@ export function SessionRescheduleWidget({ sessions }: SessionRescheduleWidgetPro
             id="requested-time"
             type="datetime-local"
             value={localDateTime}
-            onChange={(event) => setLocalDateTime(event.target.value)}
+            onChange={(event) => handleTimeChange(event.target.value)}
             // A native datetime picker respects min by disabling earlier choices. The two-hour
             // buffer is computed in local time because this is the time the parent is seeing.
             min={toDateTimeLocalValue(new Date(Date.now() + 2 * 60 * 60 * 1000))}

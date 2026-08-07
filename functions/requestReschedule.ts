@@ -1,4 +1,6 @@
 import type { RescheduleRequest, RescheduleResponse } from "../lib/types";
+import { findNearbySession } from "../lib/reschedulePolicy";
+import { upcomingSessions } from "../lib/sessions";
 
 /**
  * Local stand-in for the Firebase callable function. Keep this contract shared
@@ -28,6 +30,13 @@ export async function requestReschedule(
 
   if (requestedSlot.getTime() === existingSlot.getTime()) {
     return { success: false, error: "Choose a time different from the current session." };
+  }
+
+  // In production this list would come from the parent's schedule in Firestore.
+  // The mock uses the same static upcoming-session data shown in the widget.
+  const nearbySession = findNearbySession(request.requestedDatetimeUtc, upcomingSessions, request.sessionId);
+  if (nearbySession) {
+    return { success: false, error: `This time is within 2 hours of ${nearbySession.subject} with ${nearbySession.teacherName}.` };
   }
 
   return { success: true };
