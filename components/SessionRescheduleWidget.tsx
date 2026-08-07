@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useMemo, useState } from "react";
+import { requestReschedule } from "@/functions/requestReschedule";
 import type { RescheduleReason, TutoringSession } from "@/lib/types";
 
 interface SessionRescheduleWidgetProps {
@@ -20,11 +21,17 @@ function formatSessionTime(datetimeUtc: string): string {
   }).format(new Date(datetimeUtc));
 }
 
+function toDateTimeLocalValue(date: Date): string {
+  const offsetMilliseconds = date.getTimezoneOffset() * 60_000;
+  return new Date(date.getTime() - offsetMilliseconds).toISOString().slice(0, 16);
+}
+
 export function SessionRescheduleWidget({ sessions }: SessionRescheduleWidgetProps) {
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
   const [localDateTime, setLocalDateTime] = useState("");
   const [reason, setReason] = useState<RescheduleReason>("Conflict");
   const [message, setMessage] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const selectedSession = useMemo(
     () => sessions.find((session) => session.id === selectedSessionId) ?? null,
@@ -43,9 +50,28 @@ export function SessionRescheduleWidget({ sessions }: SessionRescheduleWidgetPro
     setMessage(null);
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>): void {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
-    setMessage("Reschedule requests will be sent for validation in the next step.");
+    if (!selectedSession || !localDateTime) return;
+
+    setIsSubmitting(true);
+    setMessage(null);
+    try {
+      // datetime-local is the parent's wall-clock choice. Date converts it to an instant;
+      // toISOString sends that instant in UTC, avoiding timezone ambiguity in the function.
+      const response = await requestReschedule({
+        sessionId: selectedSession.id,
+        existingDatetimeUtc: selectedSession.datetimeUtc,
+        requestedDatetimeUtc: new Date(localDateTime).toISOString(),
+        reason,
+      });
+      setMessage(response.success ? "Request received. We will confirm the new session shortly." : response.error ?? "Unable to request a new time.");
+      if (response.success) setLocalDateTime("");
+    } catch {
+      setMessage("We could not send your request. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -90,6 +116,9 @@ export function SessionRescheduleWidget({ sessions }: SessionRescheduleWidgetPro
             type="datetime-local"
             value={localDateTime}
             onChange={(event) => setLocalDateTime(event.target.value)}
+            // A native datetime picker respects min by disabling earlier choices. The two-hour
+            // buffer is computed in local time because this is the time the parent is seeing.
+            min={toDateTimeLocalValue(new Date(Date.now() + 2 * 60 * 60 * 1000))}
             required
           />
           <label htmlFor="reason">Reason</label>
@@ -98,8 +127,10 @@ export function SessionRescheduleWidget({ sessions }: SessionRescheduleWidgetPro
           </select>
           {message && <p className="form-message" role="status">{message}</p>}
           <div className="form-actions">
-            <button className="button button-secondary" type="button" onClick={closeForm}>Cancel</button>
-            <button className="button button-primary" type="submit">Send request</button>
+            <button className="button button-secondary" type="button" onClick={closeForm} disabled={isSubmitting}>Cancel</button>
+            <button className="button button-primary" type="submit" disabled={isSubmitting}>
+              {isSubmitting ? "Sending request..." : "Send request"}
+            </button>
           </div>
         </form>
       )}
