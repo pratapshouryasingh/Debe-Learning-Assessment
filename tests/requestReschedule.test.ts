@@ -19,6 +19,11 @@ test("rejects a slot in the past", async () => {
   assert.deepEqual(response, { success: false, error: "The new session time must be in the future." });
 });
 
+test("rejects a slot inside the two-hour tutoring lead time", async () => {
+  const response = await requestReschedule({ ...baseRequest, requestedDatetimeUtc: "2026-08-07T11:30:00.000Z" }, now);
+  assert.deepEqual(response, { success: false, error: "Please choose a time at least 2 hours from now." });
+});
+
 test("rejects the current session slot", async () => {
   const response = await requestReschedule({ ...baseRequest, requestedDatetimeUtc: baseRequest.existingDatetimeUtc }, now);
   assert.deepEqual(response, { success: false, error: "Choose a time different from the current session." });
