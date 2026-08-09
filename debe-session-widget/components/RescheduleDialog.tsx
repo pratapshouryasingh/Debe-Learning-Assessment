@@ -131,7 +131,7 @@ export default function RescheduleDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-3xl rounded-3xl">
+      <DialogContent className=" w-[calc(100%-1rem)] max-w-2xl max-h-[90vh] overflow-y-auto p-4 sm:p-6">
 
         <DialogHeader>
 
@@ -171,7 +171,7 @@ export default function RescheduleDialog({
 
 {/* Date & Time Section */}
 
-<div className="mt-6 grid grid-cols-1 gap-8 md:grid-cols-[1.4fr_1fr]">
+<div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-[1fr_200px]">
 
   {/* LEFT COLUMN */}
 
