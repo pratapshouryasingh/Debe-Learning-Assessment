@@ -1,7 +1,8 @@
 export type SessionStatus =
   | "Confirmed"
-  | "Reschedule Pending"
-  | "Completed";
+  | "Pending"
+  | "Completed"
+  | "Reschedule Pending";
 
 export type RescheduleReason =
   | "Conflict"

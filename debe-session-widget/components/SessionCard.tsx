@@ -20,15 +20,20 @@ export default function SessionCard({
   onReschedule,
 }: Props) {
   return (
-    <div className="rounded-3xl border bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
-      <div className="flex items-center gap-2">
-        <BookOpen className="text-orange-500" size={20} />
+    <div className="rounded-2xl border bg-white p-7 shadow-sm transition hover:shadow-md">
+      {/* Subject */}
+      <div className="flex items-center gap-3">
+        <BookOpen
+          size={22}
+          className="text-orange-500"
+        />
 
         <h3 className="text-xl font-semibold">
           {session.subject}
         </h3>
       </div>
 
+      {/* Session Details */}
       <div className="mt-6 space-y-4">
         <div className="flex items-center gap-3 text-slate-600">
           <UserRound size={18} />
@@ -40,7 +45,10 @@ export default function SessionCard({
           <CalendarDays size={18} />
 
           <span>
-            {format(new Date(session.dateTime), "dd MMM yyyy")}
+            {format(
+              new Date(session.dateTime),
+              "dd MMM yyyy"
+            )}
           </span>
         </div>
 
@@ -48,37 +56,43 @@ export default function SessionCard({
           <Clock3 size={18} />
 
           <span>
-            {format(new Date(session.dateTime), "hh:mm a")}
+            {format(
+              new Date(session.dateTime),
+              "hh:mm a"
+            )}
           </span>
         </div>
       </div>
 
+      {/* Status */}
       <div className="mt-6">
-       <Badge
-  className={
-    session.status === "Confirmed"
-      ? "bg-green-100 text-green-700"
-      : session.status === "Reschedule Pending"
-      ? "bg-orange-100 text-orange-700"
-      : "bg-gray-100 text-gray-700"
-  }
->
-  {session.status}
-</Badge>
+        <Badge
+          className={
+            session.status === "Confirmed"
+              ? "bg-green-100 text-green-700 hover:bg-green-100"
+              : session.status === "Reschedule Pending"
+                ? "bg-orange-100 text-orange-700 hover:bg-orange-100"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-100"
+          }
+        >
+          {session.status}
+        </Badge>
       </div>
 
-<button
-  onClick={() => onReschedule(session)}
-  className={`mt-8 w-full rounded-xl py-3 font-medium text-white transition ${
-    session.status === "Reschedule Pending"
-      ? "bg-yellow-400 hover:bg-amber-600"
-      : "bg-orange-500 hover:bg-orange-600"
-  }`}
->
-  {session.status === "Reschedule Pending"
-    ? "Edit Request"
-    : "Request Reschedule"}
-</button>
+      {/* Reschedule Button */}
+      <button
+        disabled={false}
+        onClick={() => onReschedule(session)}
+        className={`mt-8 w-full rounded-xl py-3 font-medium text-white transition ${
+          session.status === "Reschedule Pending"
+            ? "bg-yellow-400 hover:bg-amber-500"
+            : "bg-orange-500 hover:bg-orange-600"
+        }`}
+      >
+        {session.status === "Reschedule Pending"
+          ? "Edit Request"
+          : "Request Reschedule"}
+      </button>
     </div>
   );
 }

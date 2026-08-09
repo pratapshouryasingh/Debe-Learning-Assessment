@@ -204,55 +204,51 @@ export default function RescheduleDialog({
       </label>
 
       <Select
-        value={selectedTime}
-        onValueChange={setSelectedTime}
-      >
+  value={selectedTime}
+  onValueChange={(value) => {
+    if (value !== null) {
+      setSelectedTime(value);
+    }
+  }}
+>
+  <SelectTrigger>
+    <SelectValue placeholder="Select time" />
+  </SelectTrigger>
 
-        <SelectTrigger className="w-full">
-          <SelectValue placeholder="Select time" />
-        </SelectTrigger>
+  <SelectContent>
+    {timeSlots.map((slot) => {
+      const [hours, minutes] = slot.split(":").map(Number);
 
-        <SelectContent className="max-h-64">
+      const slotDate = new Date(selectedDate!);
 
-          {timeSlots.map((slot) => {
-            const [hours, minutes] = slot
-              .split(":")
-              .map(Number);
+      slotDate.setHours(hours);
+      slotDate.setMinutes(minutes);
+      slotDate.setSeconds(0);
 
-            const slotDate = new Date(selectedDate!);
+      const now = new Date();
 
-            slotDate.setHours(hours);
-            slotDate.setMinutes(minutes);
-            slotDate.setSeconds(0);
+      const minimumAllowed = new Date(
+        now.getTime() + 2 * 60 * 60 * 1000
+      );
 
-            const now = new Date();
+      const isToday =
+        selectedDate?.toDateString() === now.toDateString();
 
-            const minimumAllowed = new Date(
-              now.getTime() + 2 * 60 * 60 * 1000
-            );
+      const disabled =
+        isToday && slotDate < minimumAllowed;
 
-            const isToday =
-              selectedDate?.toDateString() ===
-              now.toDateString();
-
-            const disabled =
-              isToday && slotDate < minimumAllowed;
-
-            return (
-              <SelectItem
-                key={slot}
-                value={slot}
-                disabled={disabled}
-              >
-                {slot}
-              </SelectItem>
-            );
-          })}
-
-        </SelectContent>
-
-      </Select>
-
+      return (
+        <SelectItem
+          key={slot}
+          value={slot}
+          disabled={disabled}
+        >
+          {slot}
+        </SelectItem>
+      );
+    })}
+  </SelectContent>
+</Select>
     </div>
 
     {/* Reason */}
