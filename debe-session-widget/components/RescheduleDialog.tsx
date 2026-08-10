@@ -131,7 +131,7 @@ export default function RescheduleDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className=" w-[calc(100%-1rem)] max-w-2xl max-h-[90vh] overflow-y-auto p-4 sm:p-6">
+      <DialogContent className=" w-[calc(100%-1rem)] max-w-2xl max-h-[90vh] overflow-y-auto p-2 sm:p-4">
 
         <DialogHeader>
 
@@ -148,7 +148,7 @@ export default function RescheduleDialog({
 
         {/* Current Session */}
 
-        <div className="mt-4 rounded-2xl bg-slate-100 p-4">
+        <div className="mt-2 rounded-2xl bg-slate-100 p-4">
 
           <h3 className="font-semibold">
             {session.subject}
@@ -171,7 +171,7 @@ export default function RescheduleDialog({
 
 {/* Date & Time Section */}
 
-<div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-[1fr_200px]">
+<div className="mt-2 grid grid-cols-1 gap-6 md:grid-cols-[1fr_100px]">
 
   {/* LEFT COLUMN */}
 
@@ -266,7 +266,7 @@ export default function RescheduleDialog({
         }
       >
 
-        <SelectTrigger className="w-full">
+        <SelectTrigger >
           <SelectValue />
         </SelectTrigger>
 
@@ -320,7 +320,7 @@ export default function RescheduleDialog({
 
         {/* Footer */}
 
-        <div className="mt-8 flex justify-end gap-3">
+        <div className="mt-3 flex justify-end gap-1">
 
           <button
             onClick={() => onOpenChange(false)}
