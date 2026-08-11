@@ -17,7 +17,7 @@ export const sessions: Session[] = [
     id: "1",
     subject: "Mathematics",
     teacherName: "Sarah Johnson",
-    dateTime: createDate(1, 17, 0),
+    dateTime: createDate(0, 17, 0),
     status: "Confirmed",
   },
   {

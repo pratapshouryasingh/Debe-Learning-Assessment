@@ -11,7 +11,8 @@ Hi, I'm Pratap. Here's my submission for the Tech Intern assessment, broken into
 ## Part 1 — A Quick Tour of My Work
 
 ### Project 1 — PDF & E-Commerce Toolkit
-**Type:** Freelance project, built solo · **GitHub:** [ADD LINK] · **Live Demo:** [ADD LINK]
+**Type:** Freelance project, built solo · **GitHub Frontend:** https://github.com/pratapshouryasingh/shippingcropper  ·
+**GitHub Backend:** https://github.com/pratapshouryasingh/finalbackend . **Live Demo:** https://shippinglabelcrop.in/
 
 This is a tool that automatically converts PDFs and processes shipping labels, so people don't have to do it by hand. It also takes care of storing and managing those files in the cloud.
 
@@ -20,7 +21,7 @@ This is a tool that automatically converts PDFs and processes shipping labels, s
 **What I'd do differently now:** Right now, a lot of the PDF processing happens directly in the main app flow. If I rebuilt this today, I'd move that into background jobs instead. It would make things much easier to scale when a lot of files come in at once, and easier to retry or monitor jobs that fail.
 
 ### Project 2 — Seller Return Claim Automation
-**Type:** Freelance project, built solo · **GitHub:** https://github.com/pratapshouryasingh/autoclame-meshoo · **Demo:** [ADD VIDEO LINK]
+**Type:** Freelance project, built solo · **GitHub:** https://github.com/pratapshouryasingh/autoclame-meshoo · **Demo:** https://drive.google.com/file/d/10KIfkG19c2G7l-0DJ8VOEFo5vNZqVw1Z/view?usp=sharing
 
 Sellers on e-commerce platforms deal with a lot of return claims — wrong item, damaged item, missing item, and so on. Handling these manually is repetitive and slow, so this project automates it.
 
@@ -47,7 +48,7 @@ I found four bugs:
 
 ## Part 3 — The Reschedule Widget
 
-LIVE- 
+LIVE- https://debe-learning-assessment-25r6.vercel.app/
 
 This is a small Next.js + TypeScript widget that lets a parent see their kid's upcoming tutoring sessions and request to reschedule one.
 
@@ -79,7 +80,7 @@ Then open http://localhost:3000
 
 ## Part 4 — Me Explaining It On Camera
 
-**Video link:** [ADD YOUR LOOM / SCREEN RECORDING LINK HERE]
+**Video link:** https://drive.google.com/file/d/12V545iPob5lFUh4O-Co3vPnDc_m_Vb1f/view?usp=sharing
 
 This is a short, unedited screen recording (4–7 minutes) where I:
 

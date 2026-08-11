@@ -96,7 +96,6 @@ export default function RescheduleDialog({
     localDateTime.setMilliseconds(0);
 
     /**
-     * Assessment Requirement:
      * Parents choose a time in their local timezone,
      * but we store/send it as UTC.
      */
